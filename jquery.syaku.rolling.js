@@ -22,8 +22,11 @@
 	// private
 	var _jrolling = {
 		'options': {
-			'item': null,
-			'move': null,
+			'items': null,
+			'step': null,
+			'frame': 100,
+			'delay': 1000,
+			'move': 'left' // top, right, bottom, left
 
 		},
 
@@ -43,50 +46,48 @@
 		this.object = object;
 		this.target = object.target;
 		var $target = this.target;
-		var $item = $(object.options.item);
-		var $total = $item.length;
+		var $items = $(object.options.items);
+		var $count = $items.length;
 		var $index = 0;
 		var $timer = null;
-		var $move = object.options.move;
 
-		var style = {
+		$target.css({
 			'position': 'relative',
 			'overflow': 'hidden'
-		};
+		});
 
-		$target.css(style);
+		$items.css({ 'position': 'relative' });
+/*
+		$items.css({
+			'position': 'absolute',
+			'white-space': 'nowrap'
+		});
+*/
+		var move = {};
+		move[object.options.move] = null;
 
 		var fn = {
-			'o': function(T) {
-				var index = T.index();
-				if (index == 0)
-			},
+
 			'move': function() {
-				$item.animate({ 'top': '-=' + $move}, 1000, function() {
-					console.log($(this).index());
-				});
-
 				$index++;
+				if ($count == $index) $index = 0;
 
-				if ($index == 1) $this.stop();
+				console.log($count);
+
+				var step = null;
+				if ($index == 0) {
+					move[object.options.move] = '0';
+				} else {
+					move[object.options.move] = '-=' + object.options.step;
+				}
+
+				$items.animate(move, object.options.frame, function() {
+				});
 			}
 		};
 
-		this.init = function() {
-			$($item).each(function(i) {
-				var top = parseInt($move) * -1;
-				if (i < 2) top = parseInt($move) * i;
-
-				$(this).css({
-					'position': 'absolute',
-					'top': top + 'px'
-				});
-			});
-		}
-
-
 		this.play = function() {
-			$timer = setInterval(fn.move, 2000);
+			$timer = setInterval(fn.move, object.options.delay);
 		}
 
 		this.stop = function() {
@@ -109,7 +110,7 @@
 		object.target = this;
 
 		var instance = new jrolling( object );
-		instance.init();
+		//instance.init();
 		instance.play();
 
 		return instance;
