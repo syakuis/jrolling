@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+<script src="./jquery.syaku.rolling.js" /></script>
+
+</head>
+<body>
+<div class="container">
+
+<div class="page-header">
+	
+</div>
+
+<div id="jrolling" style="width:200px;height:600px;">
+<ul class="list-group">
+  <li class="list-group-item">aaa</li>
+  <li class="list-group-item">aa</li>
+  <li class="list-group-item">aMorbi leo risus</li>
+  <li class="list-group-item">aPorta ac consectetur ac</li>
+  <li class="list-group-item">aVestibulum at eros</li>
+</ul>
+<ul class="list-group">
+  <li class="list-group-item">bCras justo odio</li>
+  <li class="list-group-item">bDapibus ac facilisis in</li>
+  <li class="list-group-item">bMorbi leo risus</li>
+  <li class="list-group-item">bPorta ac consectetur ac</li>
+  <li class="list-group-item">bVestibulum at eros</li>
+</ul>
+<ul class="list-group">
+  <li class="list-group-item">cCras justo odio</li>
+  <li class="list-group-item">cDapibus ac facilisis in</li>
+  <li class="list-group-item">cMorbi leo risus</li>
+  <li class="list-group-item">cPorta ac consectetur ac</li>
+  <li class="list-group-item">cVestibulum at eros</li>
+</ul>
+</div>
+
+<div id="jrolling2">
+</div>
+
+
+<script type="text/javascript">
+	var jrolling = $('#jrolling').jrolling({
+		'item': '#jrolling ul',
+		'move': '220px'
+	});
+
+	//jrolling.stop();
+</script>
+
+</div>
+</body>
+</html>
