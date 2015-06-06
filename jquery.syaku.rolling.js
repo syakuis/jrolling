@@ -23,10 +23,11 @@
 	var _jrolling = {
 		'options': {
 			'items': null,
-			'step': null,
+			'width': null,
+			'height': null,
 			'frame': 100,
 			'delay': 1000,
-			'move': 'left' // top, right, bottom, left
+			'move': 'left'
 
 		},
 
@@ -42,7 +43,6 @@
 		var $this = this;
 		this.version = '0.0.1';
 
-		// 최종 옵션
 		this.object = object;
 		this.target = object.target;
 		var $target = this.target;
@@ -51,43 +51,59 @@
 		var $index = 0;
 		var $timer = null;
 
+		var $width = parseInt(object.options.width);
+		var $height = parseInt(object.options.height);
+
 		$target.css({
 			'position': 'relative',
 			'overflow': 'hidden'
 		});
 
-		$items.css({ 'position': 'relative' });
-/*
-		$items.css({
-			'position': 'absolute',
-			'white-space': 'nowrap'
+		var container_size = {};
+		var items_size = {};
+		switch(object.options.move) {
+			case 'left': 
+			case 'right': 
+				container_size = { 'width': ($width * $count) + 'px' };
+				items_size = { 'width': object.options.width };
+			break;
+			case 'up': 
+			case 'down': 
+				container_size = { 'height': ($height * $count) + 'px' };
+				items_size = { 'height': object.options.height };
+			break;
+		}
+
+		//var $container = $('<div style="position: absolute;overflow:hidden;"></div>').css(container_size);
+		//$target.append($container);
+		//$container.append($items);
+
+		$items.each(function(i) {
+			$(this).css({ 'position': 'absolute' , 'left': ($width * i) + 'px' }).css(items_size);
 		});
-*/
-		var move = {};
-		move[object.options.move] = null;
 
 		var fn = {
 
 			'move': function() {
-				$index++;
-				if ($count == $index) $index = 0;
+				$target.append( $items.first() );
+				$items.animate({ 'left': '-=' + object.options.width }, { 'duration': object.options.frame, 'step': function(x, t) {
+					//var t = $(this);
+					console.log(t);
+					//if (t.index() == 0) 
 
-				console.log($count);
-
-				var step = null;
-				if ($index == 0) {
-					move[object.options.move] = '0';
-				} else {
-					move[object.options.move] = '-=' + object.options.step;
-				}
-
-				$items.animate(move, object.options.frame, function() {
-				});
+				} });
+			},
+			'prepara': function() {
+				$target.append($items.first());
+				//$items = $(object.options.items);
+				//$(object.options.items).first().css({ 'left': '0px' });
+				$(object.options.items).first().next().css({ 'left': object.options.width });
 			}
 		};
 
 		this.play = function() {
-			$timer = setInterval(fn.move, object.options.delay);
+			fn.move();
+			//$timer = setInterval(fn.move, object.options.delay);
 		}
 
 		this.stop = function() {
