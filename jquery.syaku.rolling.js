@@ -100,13 +100,16 @@
 
 			// ---- ready 
 			//$flow = _jrolling.last2first($flow);
-			//this.prepara(true);
+			//
 
-			//console.log($flow, $index, $size);
-			//console.log('wait=============');
+			console.log($flow, $index, $size);
+			console.log('wait=============');
+
+			this.distance(true);
 		}
 
-		this.prepara = function(ready) {
+		// 위치 선정
+		this.prepare = function() {
 			//console.log('size', $size, $index);
 
 			$items.each(function(i) {
@@ -115,15 +118,13 @@
 				// 이전에 첫번째 배열은 효과를 주지 않는 다. (마지막은 효과를 주지 않는 다.)
 				var index = $flow.indexOf(i);
 				var v = null;
+
 				switch(index) {
 					case 0: 
-						v  = -1; 
-					break;
-					case 1: 
-						v = 0; 
+						v  = 0; 
 					break;
 					default:
-						v = index  - 1;
+						v = index;
 					break;
 				}
 				var distance = $width * v;
@@ -157,18 +158,88 @@
 			//return now;
 		}
 
+		// <- 이동
 		this.prev = function() {
-			$flow = _jrolling.last2first($flow);
+			$flow = _jrolling.last2first($flow); // 시작점 정리
+
+			this.distance();
+
+			$items.each(function(i) {
+				$(this).animate({ 'left': '+=' + object.options.width }, object.options.frame);
+			});
+
 			$index++;
 			if ($size == $index) $index = 0;
 		}
 		
+		// 이전 거리 계산
+		this.prevDistance = function() {
+			var arr = [];
+			$items.each(function(i) {
+				var index = $flow.indexOf(i);
+				var v = null;
+				switch(index) {
+					case 0: 
+						v  = -1; 
+					break;
+					case 1: 
+						v = 0; 
+					break;
+					default:
+						v = index  - 1;
+					break;
+				}
+				var distance = $width * v;
+				arr.push(distance);
+			});
+
+			return arr;
+		}
+
+		// 거리 계산
+		this.distance = function(next) {
+			var arr = (next == true) ? this.nextDistance() : this.prevDistance();
+			$items.each(function(i) {
+				$(this).css({ 'left': arr[i] });
+			});
+		}
+
+		// -> 이동
 		this.next = function() {
-			$flow = _jrolling.first2last($flow);
+			this.distance(true);
+
+			$flow = _jrolling.first2last($flow); // 시작점 정리
+
+			$items.each(function(i) {
+				$(this).animate({ 'left': '-=' + object.options.width }, object.options.frame);
+			});
+
 			$index++;
 			if ($size == $index) $index = 0;
+		}
 
-			$items.animate({ 'left': '-=' + object.options.width }, object.options.frame);
+		// 다음 거리 계산
+		this.nextDistance = function() {
+			var arr = [];
+			$items.each(function(i) {
+				var index = $flow.indexOf(i);
+				var v = null;
+
+				switch(index) {
+					case 0: 
+						v  = 0; 
+					break;
+					default:
+						v = index;
+					break;
+				}
+				var distance = $width * v;
+				arr.push(distance);
+				//console.log($size, i, index, v, distance);
+				//$(this).css({ 'left': distance });
+			});
+
+			return arr;
 		}
 
 		this.motion = function() {
@@ -184,22 +255,25 @@
 			2. 정리
 			*/
 
-			if ($index == 1) $this.stop();
+			if ($index == 1) { $this.next(); } else { $this.prev(); }
 
 			// 이동방향
-			$this.next();
+			
+
+		//	console.log($flow, $index);
+	//		console.log('move=============');
 
 			// 방향에 맞는 위치 선정
-			$this.prepara(false);
+			//$this.prepare(false);
 			
 			// 애니메이션
-			console.log($flow, $index);
-			console.log('move=============');
+			//console.log($flow, $index);
+			//console.log('move=============');
 			//$this.prepara().animate({ 'left': 0 }, object.options.frame);
 		}
 
 		this.play = function() {
-			//fn.motion();
+			//this.motion();
 			$timer = setInterval(this.motion, object.options.delay);
 		}
 
