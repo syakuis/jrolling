@@ -20,36 +20,86 @@
 	
 </div>
 
-<div id="jrolling" style="width:220px;height:220px;">
 <div>
-<ul class="list-group">
-  <li class="list-group-item">aaaaa</li>
-  <li class="list-group-item">aaaaa</li>
-</ul>
-<ul class="list-group">
-  <li class="list-group-item">bbbbb</li>
-  <li class="list-group-item">bbbbb</li>
-</ul>
-<ul class="list-group">
-  <li class="list-group-item">cccc</li>
-  <li class="list-group-item">cccc</li>
-</ul>
-<ul class="list-group">
-  <li class="list-group-item">ddddd</li>
-  <li class="list-group-item">ddddd</li>
-</ul>
-
+  <button type="button" class="btn btn-default" id="prev"><i class="fa fa-chevron-left"></i> prev</button>
+  <button type="button" class="btn btn-default" id="next"><i class="fa fa-chevron-right"></i> next</button>
+  <p></p>
 </div>
+
+<div id="jrolling" style="height:200px;">
+  <ul class="list-group">
+    <li class="list-group-item">aaaaa</li>
+    <li class="list-group-item">aaaaa</li>
+  </ul>
+  <ul class="list-group">
+    <li class="list-group-item">bbbbb</li>
+    <li class="list-group-item">bbbbb</li>
+  </ul>
+    <ul class="list-group">
+    <li class="list-group-item">1</li>
+    <li class="list-group-item">1</li>
+  </ul>
+  <ul class="list-group">
+    <li class="list-group-item">2</li>
+    <li class="list-group-item">2</li>
+  </ul>
+    <ul class="list-group">
+    <li class="list-group-item">3</li>
+    <li class="list-group-item">3</li>
+  </ul>
+  <ul class="list-group">
+    <li class="list-group-item">4</li>
+    <li class="list-group-item">4</li>
+  </ul>
+</div>
+
+<div id="jrolling2">
+  <ul class="list-group">
+    <li class="list-group-item">aaaaa</li>
+    <li class="list-group-item">aaaaa</li>
+  </ul>
+  <ul class="list-group">
+    <li class="list-group-item">bbbbb</li>
+    <li class="list-group-item">bbbbb</li>
+  </ul>
+    <ul class="list-group">
+    <li class="list-group-item">1</li>
+    <li class="list-group-item">1</li>
+  </ul>
+  <ul class="list-group">
+    <li class="list-group-item">2</li>
+    <li class="list-group-item">2</li>
+  </ul>
+    <ul class="list-group">
+    <li class="list-group-item">3</li>
+    <li class="list-group-item">3</li>
+  </ul>
+  <ul class="list-group">
+    <li class="list-group-item">4</li>
+    <li class="list-group-item">4</li>
+  </ul>
 </div>
 
 <script type="text/javascript">
 	var jrolling = $('#jrolling').jrolling({
 		'items': '#jrolling ul',
 		'width': '220px',
-    'height': '220px'
+    'height': '84px',
+    'move': 'up',
+    'auto': true,
+    'prev': '#prev',
+    'next': '#next'
 	});
-
-	//jrolling.stop();
+/*
+  var jrolling2 = $('#jrolling2').jrolling({
+    'items': '#jrolling2 ul',
+    'width': '220px',
+    'height': '220px',
+    'move': 'right',
+    'auto': true,
+    'prev': '#prev2',
+    'next': '#next2'
+  });*/
 </script>
 
 </div>

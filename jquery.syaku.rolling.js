@@ -26,8 +26,11 @@
 			'width': null,
 			'height': null,
 			'frame': 500,
-			'delay': 1000,
-			'move': 'left'
+			'delay': 2000,
+			'move': 'left',
+			'auto': true,
+			'prev': null,
+			'next': null
 
 		},
 
@@ -58,6 +61,19 @@
 			}
 			arr.splice(index2, 0, arr.splice(index1, 1)[0]);
 			return arr; 
+		},
+		'move': function(move) {
+			if ( move == 'left' || move == 'right') {
+				return 'left';
+			} else {
+				return 'top';
+			}
+		},
+
+		'prevHandler': function(instance) {
+			$(instance.object.options.prev).click(function(event) {
+				instance.prev(event);
+			});
 		}
 	};
 
@@ -77,12 +93,14 @@
 		var $width = parseInt(object.options.width);
 		var $height = parseInt(object.options.height);
 
-		$target.css({
-			'position': 'absolute',
-			'overflow': 'hidden'
-		});
-
 		var $flow = [];
+
+		var $container = $('<div></div>').css({
+			'position': 'relative',
+			'overflow': 'hidden',
+			'width': object.options.width,
+			'height': object.options.height,
+		});
 
 		this.init = function() {
 			$items.each(function(i) {
@@ -98,74 +116,41 @@
 				$flow.push(i);
 			});
 
-			// ---- ready 
-			//$flow = _jrolling.last2first($flow);
-			//
-
-			console.log($flow, $index, $size);
-			console.log('wait=============');
-
 			this.distance(true);
+
+			$target.append($container.append($items));
 		}
 
-		// 위치 선정
-		this.prepare = function() {
-			//console.log('size', $size, $index);
+		// 거리 계산
+		this.distance = function(next) {
+			var arr = (next == true) ? this.nextDistance() : this.prevDistance();
+
+			// 방향구하기.
+			var move = _jrolling.move(object.options.move);
 
 			$items.each(function(i) {
-
-				// $flow 첫번째는 * -1 두번째는 0 : 이지만 이동하지 않음 애니매이션 처리.
-				// 이전에 첫번째 배열은 효과를 주지 않는 다. (마지막은 효과를 주지 않는 다.)
-				var index = $flow.indexOf(i);
-				var v = null;
-
-				switch(index) {
-					case 0: 
-						v  = 0; 
-					break;
-					default:
-						v = index;
-					break;
-				}
-				var distance = $width * v;
-/*
-				var animate = true;
-				if (next == true) {
-					if (index < 2) animate = false;
-				} else if(next == false) {
-					if (($size-2) < index) animate = false;
-				}
-*/
-				console.log($size, i, index, v, distance);
-
-				$(this).css({ 'left': distance });
-
-				//if (ready != true && ($size-1) != index) {
-/*				if (ready != true) {
-					$(this).animate({ 'left': distance }, object.options.frame);
-				} else {
-					$(this).css({ 'left': distance });
-				}*/
-				//if (index < 1 && ready != true) {
-				//	$(this).animate({ 'left': distance }, object.options.frame);
-				//} else {
-				//	$(this).css({ 'left': distance });
-				//}
-
-				
+				var _move = JSON.parse( '{ "' + move + '": "' + arr[i] + 'px" }' );
+				$(this).css(_move);
 			});
-
-			//return now;
 		}
 
 		// <- 이동
-		this.prev = function() {
+		this.prevMotion = function(callback) {
 			$flow = _jrolling.last2first($flow); // 시작점 정리
 
-			this.distance();
+			this.distance(false);
 
-			$items.each(function(i) {
-				$(this).animate({ 'left': '+=' + object.options.width }, object.options.frame);
+			// 방향구하기.
+			var move = _jrolling.move(object.options.move);
+			var direction = (move == 'top') ? object.options.height : object.options.width;
+			var _move = JSON.parse( '{ "' + move + '": "+=' + direction + '" }' );
+
+			$items.each(function() {
+				$(this).animate(_move, object.options.frame, function() {
+					if ($size-1 == $(this).index()) {
+						if (typeof callback === 'function') callback();
+					}
+				});
 			});
 
 			$index++;
@@ -174,6 +159,9 @@
 		
 		// 이전 거리 계산
 		this.prevDistance = function() {
+			var move = _jrolling.move(object.options.move);
+			var direction = (move == 'top') ? $height : $width;
+
 			var arr = [];
 			$items.each(function(i) {
 				var index = $flow.indexOf(i);
@@ -189,29 +177,31 @@
 						v = index  - 1;
 					break;
 				}
-				var distance = $width * v;
+				var distance = direction * v;
 				arr.push(distance);
 			});
 
 			return arr;
 		}
 
-		// 거리 계산
-		this.distance = function(next) {
-			var arr = (next == true) ? this.nextDistance() : this.prevDistance();
-			$items.each(function(i) {
-				$(this).css({ 'left': arr[i] });
-			});
-		}
-
 		// -> 이동
-		this.next = function() {
+		this.nextMotion = function(callback) {
 			this.distance(true);
 
 			$flow = _jrolling.first2last($flow); // 시작점 정리
 
+			// 방향구하기.
+			var move = _jrolling.move(object.options.move);
+			var direction = (move == 'top') ? object.options.height : object.options.width;
+			var _move = JSON.parse( '{ "' + move + '": "-=' + direction + '" }' );
+			//console.log(_move);
+
 			$items.each(function(i) {
-				$(this).animate({ 'left': '-=' + object.options.width }, object.options.frame);
+				$(this).animate(_move, object.options.frame, function() {
+					if ($size-1 == $(this).index()) {
+						if (typeof callback === 'function') callback();
+					}
+				});
 			});
 
 			$index++;
@@ -220,6 +210,9 @@
 
 		// 다음 거리 계산
 		this.nextDistance = function() {
+			var move = _jrolling.move(object.options.move);
+			var direction = (move == 'top') ? $height : $width;
+
 			var arr = [];
 			$items.each(function(i) {
 				var index = $flow.indexOf(i);
@@ -233,52 +226,67 @@
 						v = index;
 					break;
 				}
-				var distance = $width * v;
+				var distance = direction * v;
 				arr.push(distance);
-				//console.log($size, i, index, v, distance);
-				//$(this).css({ 'left': distance });
 			});
 
 			return arr;
 		}
 
 		this.motion = function() {
-
-			/*
-			1. 준비 : 왼쪽에서 오른쪽 위에서 아래로 좌표 지정
-			2. 방향에 따른 아이템 위치 선정.
-				-> 이동전에 마지막 아이템을 처음으로
-				배열($flow) 이동
-				애니 작동
-				<- 이동후에 처음 아템을 마지막으로
-			
-			2. 정리
-			*/
-
-			if ($index == 1) { $this.next(); } else { $this.prev(); }
-
-			// 이동방향
-			
-
-		//	console.log($flow, $index);
-	//		console.log('move=============');
-
-			// 방향에 맞는 위치 선정
-			//$this.prepare(false);
-			
-			// 애니메이션
-			//console.log($flow, $index);
-			//console.log('move=============');
-			//$this.prepara().animate({ 'left': 0 }, object.options.frame);
+			switch(object.options.move) {
+				case 'left':
+				case 'up':
+					$this.nextMotion();
+				break;
+				case 'right':
+				case 'down':
+					$this.prevMotion();
+				break;
+			}
 		}
 
 		this.play = function() {
-			//this.motion();
-			$timer = setInterval(this.motion, object.options.delay);
+			if (object.options.auto == true) {
+				$timer = setInterval(this.motion, object.options.delay);
+			}
 		}
 
 		this.stop = function() {
 			clearInterval($timer);
+		}
+
+		this.timer = function(enable) {
+			if (enable == true) this.play();
+		}
+
+		this.prev = function(event) {
+			this.stop();
+			console.log(this.timer());
+			$(object.options.prev).unbind('click');
+
+			this.prevMotion(function() {
+				$(object.options.prev).click(function(event) {
+					$this.prev(event);
+				});
+
+				$this.play();
+			});
+
+			console.log(this.timer());
+		}
+
+		this.next = function(event) {
+			this.stop();
+			$(object.options.next).unbind('click');
+
+			this.nextMotion(function() {
+				$(object.options.next).click(function(event) {
+					$this.next(event);
+				});
+
+				$this.play();
+			});
 		}
 	};
 
@@ -299,6 +307,24 @@
 		var instance = new jrolling( object );
 		instance.init();
 		instance.play();
+
+		object.target.mouseover(function() {
+			instance.stop();
+		}).mouseout(function() {
+			instance.play();
+		});
+
+		if (object.options.prev != null) {
+			$(object.options.prev).click(function(event) {
+				instance.prev(event);
+			});
+		}
+
+		if (object.options.next != null) {
+			$(object.options.next).click(function(event) {
+				instance.next(event);
+			});
+		}
 
 		return instance;
 	};
