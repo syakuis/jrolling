@@ -253,16 +253,11 @@
 		}
 
 		this.stop = function() {
-			clearInterval($timer);
-		}
-
-		this.timer = function(enable) {
-			if (enable == true) this.play();
+			$timer = clearInterval($timer);
 		}
 
 		this.prev = function(event) {
 			this.stop();
-			console.log(this.timer());
 			$(object.options.prev).unbind('click');
 
 			this.prevMotion(function() {
@@ -272,8 +267,6 @@
 
 				$this.play();
 			});
-
-			console.log(this.timer());
 		}
 
 		this.next = function(event) {
