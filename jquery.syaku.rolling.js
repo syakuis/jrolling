@@ -22,16 +22,15 @@
 	// private
 	var _jrolling = {
 		'options': {
-			'items': null,
-			'width': null,
-			'height': null,
-			'frame': 500,
-			'delay': 2000,
-			'move': 'left',
-			'auto': true,
-			'prev': null,
-			'next': null
-
+			'items': null, // 대상
+			'width': null, // 대상 width
+			'height': null, // 대상 height
+			'frame': 500, // 흐르는 속도
+			'delay': 2000, // 초 후에 흐름
+			'move': 'left', // 흐름 방향
+			'auto': true, // 자동 흐름 설정
+			'prev': null, // 이전 클릭 이벤트
+			'next': null // 다음 클릭 이벤트
 		},
 
 		'config': function(options) {
@@ -80,7 +79,7 @@
 	// class
 	function jrolling(object) {
 		var $this = this;
-		this.version = '0.0.1';
+		this.version = '1.0.0';
 
 		this.object = object;
 		this.target = object.target;
@@ -103,35 +102,57 @@
 		});
 
 		this.init = function() {
+			var item_type = typeof object.options.items;
 			var items = [];
-			$(object.options.items).each(function(i) {
-				var item = $('<div></div>').css({
-					'position': 'absolute',
-					'left': '0px',
-					'top': '0px',
-					'width': object.options.width,
-					'height': object.options.height,
-					'z-index': 0
-				}).append($(this));
+			// 아이템에 div 덮기.
+			if (item_type == 'string') {
+				$(object.options.items).each(function(i) {
+					var item = $('<div></div>').css({
+						'position': 'absolute',
+						'left': '0px',
+						'top': '0px',
+						'width': object.options.width,
+						'height': object.options.height,
+						'z-index': 0
+					}).append($(this));
 
-				$flow.push(i);
-				items.push(item);
-			});
+					$flow.push(i);
+					items.push(item);
+				});
+			} else {
 
+				for(var i in object.options.items) {
+					var item = $('<div>' + object.options.items[i] + '</div>').css({
+						'position': 'absolute',
+						'left': '0px',
+						'top': '0px',
+						'width': object.options.width,
+						'height': object.options.height,
+						'z-index': 0
+					});
+
+					$flow.push(parseInt(i));
+					items.push(item);
+				}
+			}
+
+			// 대상에 컨테이너 생성.
 			$target.append($container.append(items));
 
 			$items = $(items);
 			$size = $items.length;
 
+			// 초기 정렬
 			this.distance(true);
 
+			// 마우스 오버
 			$container.mouseover(function() {
 				$this.stop();
 			}).mouseout(function() {
 				$this.play();
 			});
 
-
+			// 이전 다음 클릭
 			if (object.options.prev != null) {
 				$(object.options.prev).click(function(event) {
 					$this.clickBefore(event, false);
@@ -164,6 +185,8 @@
 		this.prevMotion = function(callback) {
 			$flow = _jrolling.last2first($flow); // 시작점 정리
 
+			$target.trigger( "motionBefore", [ $index ] );
+
 			this.distance(false);
 
 			// 방향구하기.
@@ -178,6 +201,8 @@
 					}
 				});
 			});
+
+			$target.trigger( "motionAfter", [ $index ] );
 
 			$index++;
 			if ($size == $index) $index = 0;
@@ -212,6 +237,7 @@
 
 		// -> 이동
 		this.nextMotion = function(callback) {
+			$target.trigger( "motionBefore", [ $index ] );
 			this.distance(true);
 
 			$flow = _jrolling.first2last($flow); // 시작점 정리
@@ -229,6 +255,7 @@
 					}
 				});
 			});
+			$target.trigger( "motionAfter", [ $index ] );
 
 			$index++;
 			if ($size == $index) $index = 0;
