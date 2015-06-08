@@ -85,8 +85,6 @@
 		this.object = object;
 		this.target = object.target;
 		var $target = this.target;
-		var $items = $(object.options.items);
-		var $size = $items.length;
 		var $index = 0;
 		var $timer = null;
 
@@ -94,6 +92,8 @@
 		var $height = parseInt(object.options.height);
 
 		var $flow = [];
+		var $items = null;
+		var $size = null;
 
 		var $container = $('<div></div>').css({
 			'position': 'relative',
@@ -103,22 +103,48 @@
 		});
 
 		this.init = function() {
-			$items.each(function(i) {
-				$(this).css({
+			var items = [];
+			$(object.options.items).each(function(i) {
+				var item = $('<div></div>').css({
 					'position': 'absolute',
 					'left': '0px',
 					'top': '0px',
 					'width': object.options.width,
 					'height': object.options.height,
 					'z-index': 0
-				});
+				}).append($(this));
 
 				$flow.push(i);
+				items.push(item);
 			});
+
+			$target.append($container.append(items));
+
+			$items = $(items);
+			$size = $items.length;
 
 			this.distance(true);
 
-			$target.append($container.append($items));
+			$container.mouseover(function() {
+				$this.stop();
+			}).mouseout(function() {
+				$this.play();
+			});
+
+
+			if (object.options.prev != null) {
+				$(object.options.prev).click(function(event) {
+					$this.clickBefore(event, false);
+				});
+			}
+
+			if (object.options.next != null) {
+				$(object.options.next).click(function(event) {
+					$this.clickBefore(event, true);
+				});
+			}
+
+			$this.play();
 		}
 
 		// 거리 계산
@@ -256,30 +282,33 @@
 			$timer = clearInterval($timer);
 		}
 
-		this.prev = function(event) {
+		this.clickBefore = function(event, next) {
 			this.stop();
 			$(object.options.prev).unbind('click');
-
-			this.prevMotion(function() {
-				$(object.options.prev).click(function(event) {
-					$this.prev(event);
-				});
-
-				$this.play();
-			});
-		}
-
-		this.next = function(event) {
-			this.stop();
 			$(object.options.next).unbind('click');
 
-			this.nextMotion(function() {
-				$(object.options.next).click(function(event) {
-					$this.next(event);
-				});
 
-				$this.play();
+			if (next == true) {
+				this.nextMotion(function() {
+					$this.clickAfter();
+				});
+			} else {
+				this.prevMotion(function() {
+					$this.clickAfter();
+				});
+			}
+		}
+
+		this.clickAfter = function() {
+			$(object.options.prev).click(function(event) {
+				$this.clickBefore(event, false);
 			});
+
+			$(object.options.next).click(function(event) {
+				$this.clickBefore(event, true);
+			});
+
+			$this.play();
 		}
 	};
 
@@ -299,25 +328,6 @@
 
 		var instance = new jrolling( object );
 		instance.init();
-		instance.play();
-
-		object.target.mouseover(function() {
-			instance.stop();
-		}).mouseout(function() {
-			instance.play();
-		});
-
-		if (object.options.prev != null) {
-			$(object.options.prev).click(function(event) {
-				instance.prev(event);
-			});
-		}
-
-		if (object.options.next != null) {
-			$(object.options.next).click(function(event) {
-				instance.next(event);
-			});
-		}
 
 		return instance;
 	};
