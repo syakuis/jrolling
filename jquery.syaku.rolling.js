@@ -145,6 +145,9 @@
 			// 초기 정렬
 			this.distance(true);
 
+			// 배열이 한개 인 경우 종료
+			if ($size == 1) return;
+
 			// 마우스 오버
 			$container.mouseover(function() {
 				$this.stop();
