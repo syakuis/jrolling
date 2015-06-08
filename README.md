@@ -2,7 +2,8 @@
 jrolling 은 jQuery 로 개발된 rolling 플러그인 입니다. 특정 영역을 왼쪽, 오른쪽, 위, 아래로 흐르게 합니다.
 이전에 개발된 `https://github.com/syakuis/jquery-slider-rolling` 을 개선한 플러그인입니다.
 
-> 데모: http://syakuis.github.io/demo/jrolling/demo.html
+> Github: https://github.com/syakuis/jrolling
+데모: http://syakuis.github.io/demo/jrolling/demo.html
 
 ### 지원
 > 자동 롤링
