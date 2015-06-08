@@ -1,0 +1,22 @@
+{
+  "name": "jrolling",
+  "version": "1.0.0",
+  "homepage": "https://github.com/syakuis/jquery-slider-rolling",
+  "authors": [
+    "syaku@naver.com"
+  ],
+  "description": "jQuery rolling",
+  "keywords": [
+    "javascrit",
+    "jQuery",
+    "rolling"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
