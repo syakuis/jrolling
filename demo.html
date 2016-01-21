@@ -45,11 +45,15 @@
 			'move': 'up',
 			'auto': false,
 			'prev': '#prev',
-			'next': '#next'
+			'next': '#next',
+			'play': '#play',
+			'stop': '#stop'
 		});
-
+		jrolling.target.on('motionBefore', function(event, index) {
+			$('#jrolling_text1').text(index);
+		});
 		jrolling.target.on('motionAfter', function(event, index) {
-			$('#jrolling_text').text(index);
+			$('#jrolling_text2').text(index);
 		});
 	</pre>
 
@@ -80,22 +84,15 @@
 
 	<p class="lead"><i class="glyphicon glyphicon-ok"></i> 임의적인 배열 데이터의 흐름</p>
 	<pre>
-		var jrolling = $('#jrolling').jrolling({
-			'items': '#jrolling ul',
+		var jrolling2 = $('#jrolling2').jrolling({
+			'items': [ 'a', 'b', 'c' ],
 			'width': '220px',
-			'height': '84px',
-			'move': 'up',
-			'auto': false,
-			'prev': '#prev',
-			'next': '#next',
-			'play': '#play',
-			'stop': '#stop'
+			'height': '220px',
+			'auto': true
 		});
-		jrolling.target.on('motionBefore', function(event, index) {
-			$('#jrolling_text1').text(index);
-		});
-		jrolling.target.on('motionAfter', function(event, index) {
-			$('#jrolling_text2').text(index);
+
+		jrolling2.target.on('motionAfter', function(event, index) {
+			$('#jrolling2_text').text(index);
 		});
 	</pre>
 	<div id="jrolling2">

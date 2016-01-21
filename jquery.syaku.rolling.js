@@ -313,7 +313,6 @@
 		}
 
 		this.motion = function() {
-			this.stop();
 			$(object.options.prev).unbind('click');
 			$(object.options.next).unbind('click');
 
@@ -344,7 +343,7 @@
 		}
 
 		this.clickBefore = function(event, next) {
-			this.stop();
+			$this.stop();
 			$(object.options.prev).unbind('click');
 			$(object.options.next).unbind('click');
 
