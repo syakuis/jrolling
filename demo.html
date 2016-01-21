@@ -1,129 +1,146 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
+	<meta charset="utf-8">
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
-<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 
-<script src="./jquery.syaku.rolling.js" /></script>
-
+	<script src="./jquery.syaku.rolling.js"></script>
 </head>
 <body>
-<div class="container">
+	<div class="container">
 
-<div class="page-header">
-	<h1>jQuery Rolling</h1>
-</div>
+	<div class="page-header">
+		<h1>jQuery Rolling</h1>
+	</div>
 
-<p class="lead"><i class="fa fa-check"></i> 기본 옵션</p>
-<pre>
-default = {
-	'items': null, // 대상
-	'width': null, // 대상 width
-	'height': null, // 대상 height
-	'frame': 500, // 흐르는 속도
-	'delay': 2000, // 초 후에 흐름
-	'move': 'left', // 흐름 방향
-	'auto': true, // 자동 흐름 설정
-	'prev': null, // 이전 클릭 이벤트
-	'next': null // 다음 클릭 이벤트
-}
-</pre>
-<hr>
+	<p class="lead"><i class="glyphicon glyphicon-ok"></i> 기본 옵션</p>
+	<pre>
+	default = {
+		'items': null, // 대상
+		'width': null, // 대상 width
+		'height': null, // 대상 height
+		'frame': 500, // 흐르는 속도
+		'delay': 2000, // 초 후에 흐름
+		'move': 'left', // 흐름 방향
+		'auto': true, // 자동 흐름 설정
+		'prev': null, // 이전 클릭 이벤트
+		'next': null, // 다음 클릭 이벤트
+		'play': null, // 실행 클릭 이벤트
+		'stop': null // 종료 클릭 이벤트
+	}
+	</pre>
+	<hr>
 
-<p class="lead"><i class="fa fa-check"></i> 기본 흐름</p>
-<pre>
-	var jrolling = $('#jrolling').jrolling({
-		'items': '#jrolling ul',
-		'width': '220px',
-		'height': '84px',
-		'move': 'up',
-		'auto': false,
-		'prev': '#prev',
-		'next': '#next'
-	});
+	<p class="lead"><i class="glyphicon glyphicon-ok"></i> 기본 흐름</p>
+	<pre>
+		var jrolling = $('#jrolling').jrolling({
+			'items': '#jrolling ul',
+			'width': '220px',
+			'height': '84px',
+			'move': 'up',
+			'auto': false,
+			'prev': '#prev',
+			'next': '#next'
+		});
 
-	jrolling.target.on('motionAfter', function(event, index) {
-		$('#jrolling_text').text(index);
-	});
-</pre>
+		jrolling.target.on('motionAfter', function(event, index) {
+			$('#jrolling_text').text(index);
+		});
+	</pre>
 
-<div>
-	<button type="button" class="btn btn-default" id="prev"><i class="fa fa-chevron-left"></i> prev</button>
-	<button type="button" class="btn btn-default" id="next"><i class="fa fa-chevron-right"></i> next</button>
-	<p></p>
-</div>
+	<div>
+		<button type="button" class="btn btn-default" id="prev"><i class="glyphicon glyphicon-chevron-left"></i> prev</button>
+		<button type="button" class="btn btn-default" id="next"><i class="glyphicon glyphicon-chevron-right"></i> next</button>
+		<button type="button" class="btn btn-default" id="play"><i class="glyphicon glyphicon-play"></i> play</button>
+		<button type="button" class="btn btn-default" id="stop"><i class="glyphicon glyphicon-stop"></i> stop</button>
+		<p></p>
+	</div>
 
-<div class="well well-lg" id="jrolling">
-	<ul class="list-group">
-		<li class="list-group-item">aaaaa</li>
-		<li class="list-group-item">aaaaa</li>
-	</ul>
-</div>
-<div class="alert alert-success" role="alert" id="jrolling_text"></div>
-<hr>
+	<div class="well well-lg" id="jrolling">
+		<ul class="list-group">
+			<li class="list-group-item">1</li>
+			<li class="list-group-item">1</li>
+		</ul>
+		<ul class="list-group">
+			<li class="list-group-item">2</li>
+			<li class="list-group-item">2</li>
+		</ul>
 
-<p class="lead"><i class="fa fa-check"></i> 임의적인 배열 데이터의 흐름</p>
-<pre>
-	var jrolling2 = $('#jrolling2').jrolling({
-		'items': [ 'a', 'b', 'c' ],
-		'width': '220px',
-		'height': '220px',
-		'auto': true,
-		'prev': '#prev2',
-		'next': '#next2'
-	});
+	</div>
+	<div class="alert alert-success" role="alert">
+		<p>이전 index: <span id="jrolling_text1"></span></p>
+		<p>현재 index: <span id="jrolling_text2"></span></p>
+	</div>
+	<hr>
 
-	jrolling2.target.on('motionBefore', function(event, index) {
-		$('#jrolling2_text').text(index);
-	});
-</pre>
-<div id="jrolling2">
-</div>
+	<p class="lead"><i class="glyphicon glyphicon-ok"></i> 임의적인 배열 데이터의 흐름</p>
+	<pre>
+		var jrolling = $('#jrolling').jrolling({
+			'items': '#jrolling ul',
+			'width': '220px',
+			'height': '84px',
+			'move': 'up',
+			'auto': false,
+			'prev': '#prev',
+			'next': '#next',
+			'play': '#play',
+			'stop': '#stop'
+		});
+		jrolling.target.on('motionBefore', function(event, index) {
+			$('#jrolling_text1').text(index);
+		});
+		jrolling.target.on('motionAfter', function(event, index) {
+			$('#jrolling_text2').text(index);
+		});
+	</pre>
+	<div id="jrolling2">
+	</div>
 
-<div class="alert alert-success" role="alert" id="jrolling2_text"></div>
+	<div class="alert alert-success" role="alert"></div>
 
-<script type="text/javascript">
-	var jrolling = $('#jrolling').jrolling({
-		'items': '#jrolling ul',
-		'width': '220px',
-		'height': '84px',
-		'move': 'up',
-		'auto': false,
-		'prev': '#prev',
-		'next': '#next'
-	});
+	<script type="text/javascript">
+		var jrolling = $('#jrolling').jrolling({
+			'items': '#jrolling ul',
+			'width': '220px',
+			'height': '84px',
+			'move': 'up',
+			'auto': false,
+			'prev': '#prev',
+			'next': '#next',
+			'play': '#play',
+			'stop': '#stop'
+		});
+		jrolling.target.on('motionBefore', function(event, index) {
+			$('#jrolling_text1').text(index);
+		});
+		jrolling.target.on('motionAfter', function(event, index) {
+			$('#jrolling_text2').text(index);
+		});
 
-	jrolling.target.on('motionAfter', function(event, index) {
-		$('#jrolling_text').text(index);
-	});
+		var jrolling2 = $('#jrolling2').jrolling({
+			'items': [ 'a', 'b', 'c' ],
+			'width': '220px',
+			'height': '220px',
+			'auto': true
+		});
 
-	var jrolling2 = $('#jrolling2').jrolling({
-		'items': [ 'a', 'b', 'c' ],
-		'width': '220px',
-		'height': '220px',
-		'auto': true,
-		'prev': '#prev2',
-		'next': '#next2'
-	});
+		jrolling2.target.on('motionAfter', function(event, index) {
+			$('#jrolling2_text').text(index);
+		});
+	</script>
 
-	jrolling2.target.on('motionBefore', function(event, index) {
-		$('#jrolling2_text').text(index);
-	});
-</script>
+	<p class="lead"><i class="glyphicon glyphicon-ok"></i> 이벤트 트리거</p>
+	<pre>
+	motionBefore : 이동 전
+	motionAfter : 이동 후
+	</pre>
+	<hr>
 
-<p class="lead"><i class="fa fa-check"></i> 이벤트 트리거</p>
-<pre>
-motionBefore : 이동 전
-motionAfter : 이동 후
-</pre>
-<hr>
-
-</div>
+	</div>
 </body>
 </html>
